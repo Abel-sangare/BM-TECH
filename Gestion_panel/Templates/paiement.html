@@ -1,0 +1,84 @@
+{% extends "AdminPanel.html" %}
+
+{% block title %}Enregistrer un paiement{% endblock %}
+
+{% block content %}
+<div class="page-title">
+    <h2>Enregistrer un paiement</h2>
+</div>
+
+<form method="POST" action="">
+    {% csrf_token %}
+    <div class="form-group">
+        <label>Élève</label>
+        <select name="etudiant" required>
+            <option value="">-- Sélectionner un étudiant --</option>
+            {% for etudiant in etudiants %}
+            <option value="{{ etudiant.id }}">{{ etudiant.nom }} {{ etudiant.prenom }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Logiciel / Matière</label>
+        <select name="logiciel" required>
+            <option value="">-- Sélectionner un logiciel --</option>
+            {% for logiciel in logiciels %}
+            <option value="{{ logiciel.id }}">{{ logiciel.nom }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Montant à payer</label>
+        <input type="number" step="0.01" name="montant" placeholder="Ex: 100.00" required>
+    </div>
+
+    <div class="form-group">
+        <label>Mode de paiement</label>
+        <select name="mode" required>
+            <option value="cash">Espèces</option>
+            <option value="mobile_money">Mobile Money</option>
+            <option value="cheque">Chèque</option>
+            <option value="virement">Virement bancaire</option>
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Référence (optionnelle)</label>
+        <input type="text" name="reference" placeholder="Ex: numéro reçu ou transaction">
+    </div>
+
+    <button type="submit" class="btn btn-success">Enregistrer le paiement</button>
+</form>
+
+{% if paiement %}
+<hr>
+<h3>Tranches de paiement pour {{ paiement.inscription.eleve.nom }} - {{ paiement.inscription.matiere.nom }}</h3>
+<p>Montant restant : {{ reste }} €</p>
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Montant</th>
+            <th>Mode</th>
+            <th>Référence</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tranche in tranches %}
+        <tr>
+            <td>{{ tranche.date_paiement|date:"d/m/Y H:i" }}</td>
+            <td>{{ tranche.montant }} €</td>
+            <td>{{ tranche.get_mode_display }}</td>
+            <td>{{ tranche.reference }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="4" style="text-align:center;">Aucune tranche</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+{% endblock %}

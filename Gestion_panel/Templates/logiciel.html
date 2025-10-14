@@ -1,0 +1,111 @@
+{% extends "AdminPanel.html" %}
+
+{% block title %}Gestion des logiciels{% endblock %}
+
+{% block content %}
+<div class="page-title">
+    <h2>Gestion des logiciels</h2>
+</div>
+
+<!-- Formulaire de recherche -->
+<div class="form-container">
+    {% if messages %}
+        <div style="text-align:center; color: green; font-style:italic; font-weight:bold; margin-bottom:20px;">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+        <a href="{% url 'imprimer_programme' %}" class="btn btn-success">Imprimer</a>
+
+</div>
+
+<!-- Formulaire d'enregistrement / modification -->
+<div class="form-container">
+    <form method="POST" action="{% if logiciel %}{% url 'modifier_logiciel' logiciel.id %}{% else %}{% url 'gestion_logiciel' %}{% endif %}">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="nom">Nom du logiciel</label>
+            <input type="text" name="nom" id="nom" placeholder="Nom du logiciel"
+                   value="{{ logiciel.nom|default:'' }}" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea name="description" id="description" placeholder="Description du logiciel">{{ logiciel.description|default:'' }}</textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="duree">Durée</label>
+            <select name="duree" id="duree">
+                <option value="1semaine" {% if logiciel and logiciel.duree == '1semaine' %}selected{% endif %}>1 semaine</option>
+                <option value="2semaines" {% if logiciel and logiciel.duree == '2semaines' %}selected{% endif %}>2 semaines</option>
+                <option value="3semaines" {% if logiciel and logiciel.duree == '3semaines' %}selected{% endif %}>3 semaines</option>
+                <option value="1mois" {% if logiciel and logiciel.duree == '1mois' %}selected{% endif %}>1 mois</option>
+                <option value="2mois" {% if logiciel and logiciel.duree == '2mois' %}selected{% endif %}>2 mois</option>
+                <option value="3mois" {% if logiciel and logiciel.duree == '3mois' %}selected{% endif %}>3 mois</option>
+                <option value="indefini" {% if logiciel and logiciel.duree == 'indefini' %}selected{% endif %}>Indéfini</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="duree_jours">Durée en jours (optionnel)</label>
+            <input type="number" name="duree_jours" id="duree_jours" placeholder="Ex: 30"
+                   value="{{ logiciel.duree_jours|default:'' }}">
+        </div>
+
+        <div class="form-group">
+            <label for="prix">Prix</label>
+            <input type="number" step="0.01" name="prix" id="prix" placeholder="Ex: 150.00"
+                   value="{{ logiciel.prix|default:'' }}">
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            {% if logiciel %}Modifier{% else %}Enregistrer{% endif %}
+        </button>
+    </form>
+</div>
+
+<!-- Tableau des logiciels -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Code</th>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Durée</th>
+                <th>Durée (jours)</th>
+                <th>Prix</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for logiciel in logiciels %}
+            <tr>
+                <td>{{ logiciel.code_logiciel }}</td>
+                <td>{{ logiciel.nom }}</td>
+                <td>{{ logiciel.description|default:"-" }}</td>
+                <td>{{ logiciel.get_duree_display }}</td>
+                <td>{{ logiciel.duree_jours|default:"-" }}</td>
+                <td>{{ logiciel.prix|default:"-" }}</td>
+                <td class="action-buttons">
+                    <a href="{% url 'modifier_logiciel' logiciel.id %}" class="btn btn-primary" title="Modifier">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'supprimer_logiciel' logiciel.id %}" class="btn btn-danger" title="Supprimer"
+                       onclick="return confirm('Voulez-vous vraiment supprimer ce logiciel ?')">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" style="text-align:center;">Aucun logiciel trouvé</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

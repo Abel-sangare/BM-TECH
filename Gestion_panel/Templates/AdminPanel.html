@@ -1,0 +1,158 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BM Technologie - Gestion de Centre de Formation</title>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <!-- Interface principale -->
+    <div id="mainApp" class="container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-laptop-code"></i>
+                <h2 id="logoText">BM Technologie</h2>
+            </div>
+            <div class="sidebar-menu">
+                <ul>
+                    <li class="active">
+                        <a href="{% url 'index' %}">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Tableau de bord</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'etudiants' %}">
+                            <i class="fas fa-user-graduate"></i>
+                            <span>Etudiants</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'logiciels' %}">
+                            <i class="fas fa-book"></i>
+                            <span>Logiciels</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'emploi' %}">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>Emploi du temps</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{url 'paiements' %}">
+                            <i class="fas fa-users"></i>
+                            <span>Paiements</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{% url 'utilisateurs' %}">
+                            <i class="fas fa-user-cog"></i>
+                            <span>Utilisateurs</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <div class="menu-toggle" onclick="toggleSidebar()">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="user-info" onclick="toggleDropdown()">
+                    {% if current_user %}
+                        <img src="https://ui-avatars.com/api/?name={{ current_user.nom }}+{{ current_user.prenom }}&background=3498db&color=fff" alt="{{ current_user.nom }}">
+                        <div class="dropdown">
+                            <a href="{% url 'profil' %}">Profil</a>
+                            <a href="#">Paramètres</a>
+                            <a href="{% url 'logout' %}">Déconnexion</a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="content">
+                 {% block content %}
+                    <!-- Dashboard Section -->
+                    <div id="dashboard" class="section active">
+                        <div class="page-title">
+                            <h2>Tableau de bord</h2>
+                            <div>Date: <span id="currentDate"></span></div>
+                        </div>
+
+                        <div class="cards">
+                            <div class="card">
+                                <div class="card-icon blue">
+                                    <i class="fas fa-user-graduate"></i>
+                                </div>
+                                <h3>245</h3>
+                                <p>Élèves inscrits</p>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon green">
+                                    <i class="fas fa-book"></i>
+                                </div>
+                                <h3>18</h3>
+                                <p>Matières enseignées</p>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon orange">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                                <h3>12</h3>
+                                <p>Classes actives</p>
+                            </div>
+                            <div class="card">
+                                <div class="card-icon red">
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                </div>
+                                <h3>8</h3>
+                                <p>Enseignants</p>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Toggle sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById("sidebar");
+            const logoText = document.getElementById("logoText");
+            sidebar.classList.toggle("collapsed");
+            logoText.style.display = sidebar.classList.contains("collapsed") ? "none" : "block";
+        }
+
+        // Toggle dropdown
+        function toggleDropdown() {
+            document.querySelector(".user-info").classList.toggle("active");
+        }
+
+
+
+                // Script pour gérer l'état actif au clic
+        const sidebarLinks = document.querySelectorAll('.sidebar-menu li a');
+
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                // Retire 'active' de tous
+                sidebarLinks.forEach(l => l.classList.remove('active'));
+                // Ajoute 'active' à celui cliqué
+                this.classList.add('active');
+            });
+        });
+
+    </script>
+</body>
+</html>

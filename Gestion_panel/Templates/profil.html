@@ -1,0 +1,48 @@
+{% extends "AdminPanel.html" %}
+
+{% block title %}Profil{% endblock %}
+
+{% block content %}
+<div class="page-title">
+    <h2>Mon Profil</h2>
+</div>
+
+{% if messages %}
+    <div style="text-align:center; color: green; font-style:italic; font-weight:bold; margin-bottom:20px;">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+    </div>
+{% endif %}
+
+<div class="form-container">
+    <form method="POST" action="{% url 'mise_a_jour_profil' %}">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="nom">Nom</label>
+            <input type="text" name="nom" id="nom" value="{{ user.nom }}" required>
+        </div>
+        <div class="form-group">
+            <label for="prenom">Prénom</label>
+            <input type="text" name="prenom" id="prenom" value="{{ user.prenom }}" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" value="{{ user.email }}" required>
+        </div>
+        <div class="form-group">
+            <label for="telephone">Téléphone</label>
+            <input type="text" name="telephone" id="telephone" value="{{ user.telephone }}">
+        </div>
+        <div class="form-group">
+            <label for="adresse">Adresse</label>
+            <input type="text" name="adresse" id="adresse" value="{{ user.adresse }}">
+        </div>
+        <div class="form-group">
+            <label for="mot_de_passe">Mot de passe (laisser vide si inchangé)</label>
+            <input type="password" name="mot_de_passe" id="mot_de_passe">
+        </div>
+        <button type="submit" class="btn btn-success">Mettre à jour</button>
+    </form>
+</div>
+{% endblock %}

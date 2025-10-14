@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Liste des Logiciels - Centre de Formation BM-TECH</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+            --success-color: #2ecc71;
+        }
+
+        body {
+            font-family: 'DejaVu Sans', sans-serif;
+            font-size: 13px;
+            color: #333;
+            margin: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            margin: 5px 0;
+            font-size: 20px;
+        }
+
+        header p {
+            margin: 2px 0;
+            font-size: 12px;
+        }
+
+        .table-container {
+            background-color: #fff;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            padding: 10px;
+        }
+
+        h2 {
+            background: var(--secondary-color);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 5px;
+        }
+
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background: var(--light-color);
+            font-weight: bold;
+        }
+
+        .price {
+            color: var(--success-color);
+            font-weight: bold;
+        }
+
+        .duration {
+            display: inline-block;
+            background-color: var(--light-color);
+            padding: 3px 8px;
+            border-radius: 15px;
+            font-size: 12px;
+        }
+
+        .empty-row {
+            text-align: center;
+            padding: 15px;
+            color: #777;
+            font-style: italic;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 12px;
+            color: #555;
+            margin-top: 20px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Centre de Formation BM Technologie</h1>
+        <p>Kagbelen plateau, Conakry Guinée</p>
+        <p>Tél : +33 1 23 45 67 89 | Email : contact@formation-excellence.fr</p>
+    </header>
+
+    <div class="table-container">
+        <h2>Liste des Logiciels</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Code</th>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Durée</th>
+                    <th>Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if logiciels %}
+                    {% for logiciel in logiciels %}
+                    <tr>
+                        <td>{{ logiciel.code }}</td>
+                        <td>{{ logiciel.nom }}</td>
+                        <td>{{ logiciel.description }}</td>
+                        <td><span class="duration">{{ logiciel.duree }}</span></td>
+                        <td class="price">{{ logiciel.prix }}€</td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+                        <td colspan="5" class="empty-row">Aucun logiciel trouvé.</td>
+                    </tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+
+    <footer>
+        &copy; {{ now|date:"Y" }} Centre de Formation Excellence - Tous droits réservés
+    </footer>
+</body>
+</html>

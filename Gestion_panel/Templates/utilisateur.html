@@ -1,0 +1,126 @@
+{% extends "AdminPanel.html" %}
+
+{% block title %}Gestion des utilisateurs{% endblock %}
+
+{% block content %}
+<div class="page-title">
+    <h2>Gestion des utilisateurs</h2>
+</div>
+
+<!-- Formulaire d'enregistrement / modification -->
+<div class="form-container">
+    {% if messages %}
+        <div style="text-align:center; color: green; font-style:italic; font-weight:bold; margin-bottom:20px;">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    <form method="POST" action="{% url 'creer_utilisateur' %}">
+        {% csrf_token %}        
+        <div class="form-group">
+            <label for="nom">Nom</label>
+            <input type="text" name="nom" id="nom" value="{% if utilisateur_edit %}{{ utilisateur_edit.nom }}{% endif %}" placeholder="Nom" required>
+        </div>
+        <div class="form-group">
+            <label for="prenom">Prénom</label>
+            <input type="text" name="prenom" id="prenom" value="{% if utilisateur_edit %}{{ utilisateur_edit.prenom }}{% endif %}" placeholder="Prénom" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" value="{% if utilisateur_edit %}{{ utilisateur_edit.email }}{% endif %}" placeholder="Email" required>
+        </div>
+        <div class="form-group">
+            <label for="mot_de_passe">Mot de passe</label>
+            <input type="password" name="mot_de_passe" id="mot_de_passe" value="{% if utilisateur_edit %}{{ utilisateur_edit.mot_de_passe }}{% endif %}" placeholder="Mot de passe" required>
+        </div>
+        <div class="form-group">
+            <label for="telephone">Téléphone</label>
+            <input type="text" name="telephone" id="telephone" value="{% if utilisateur_edit %}{{ utilisateur_edit.telephone }}{% endif %}" placeholder="Téléphone">
+        </div>
+        <div class="form-group">
+            <label for="adresse">Adresse</label>
+            <input type="text" name="adresse" id="adresse" value="{% if utilisateur_edit %}{{ utilisateur_edit.adresse }}{% endif %}" placeholder="Adresse">
+        </div>
+        <div class="form-group">
+            <label for="role">Rôle</label>
+            <select name="role" id="role" required>
+                <option value="admin" {% if utilisateur_edit and utilisateur_edit.role == "admin" %}selected{% endif %}>Administrateur</option>
+                <option value="super" {% if utilisateur_edit and utilisateur_edit.role == "super" %}selected{% endif %}>Super Administrateur</option>
+                <option value="enseignant" {% if utilisateur_edit and utilisateur_edit.role == "enseignant" %}selected{% endif %}>Enseignant</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="actif">Statut</label>
+            <select name="actif" id="actif" required>
+                <option value="True" {% if utilisateur_edit and utilisateur_edit.actif %}selected{% endif %}>Actif</option>
+                <option value="False" {% if utilisateur_edit and not utilisateur_edit.actif %}selected{% endif %}>Inactif</option>
+            </select>
+        </div>
+        <button type="submit" class="btn btn-success">
+            {% if utilisateur_edit %}Modifier{% else %}Enregistrer{% endif %}
+        </button>
+    </form>
+</div>
+
+<!-- Tableau des utilisateurs -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Adresse</th>
+                <th>Rôle</th>
+                <th>Statut</th>
+                <th>Date de création</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in utilisateurs %}
+            <tr>
+                <td>{{ user.nom }}</td>
+                <td>{{ user.prenom }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.telephone }}</td>
+                <td>{{ user.adresse }}</td>
+                <td>{{ user.role }}</td>
+                <td>{{ user.actif|yesno:"Actif,Inactif" }}</td>
+                <td>{{ user.date_creation|date:"d/m/Y" }}</td>
+                <td class="action-buttons">
+                    <!-- Modifier -->
+                    <a href="" class="btn btn-primary" title="Modifier">
+                        <i class="fas fa-edit"></i>
+                    </a>
+
+                    <!-- Désactiver / Réactiver selon le statut -->
+                    {% if user.actif %}
+                        <a href="{% url 'desactiver_utilisateur' user.id %}" class="btn btn-warning" title="Désactiver">
+                            <i class="fas fa-user-slash"></i>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'reactiver_utilisateur' user.id %}" class="btn btn-success" title="Réactiver">
+                            <i class="fas fa-user-check"></i>
+                        </a>
+                    {% endif %}
+
+                    <!-- Supprimer -->
+                    <a href="{% url 'supprimer_utilisateur' user.id %}" class="btn btn-danger" title="Supprimer"
+                    onclick="return confirm('Voulez-vous vraiment supprimer cet utilisateur ?')">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="9" style="text-align:center;">Aucun utilisateur trouvé</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,101 @@
+{% extends "AdminPanel.html" %}
+
+{% block title %}Gestion de l'emploi du temps{% endblock %}
+
+{% block content %}
+<div class="page-title">
+    <h2>Gestion de l'emploi du temps</h2>
+</div>
+
+<!-- Formulaire d'ajout d'une séance -->
+<div class="form-container">
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="matiere">Matière / Logiciel</label>
+            <select name="matiere" id="matiere" required>
+                <option value="">-- Sélectionner une matière --</option>
+                {% for logiciel in logiciels %}
+                    <option value="{{ logiciel.id }}">{{ logiciel.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="enseignant">Enseignant</label>
+            <select name="enseignant" id="enseignant" required>
+                <option value="">-- Sélectionner un enseignant --</option>
+                {% for utilisateur in enseignants %}
+                    <option value="{{ utilisateur.id }}">{{ utilisateur.nom }} {{ utilisateur.prenom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="jour_semaine">Jour de la semaine</label>
+            <select name="jour_semaine" id="jour_semaine" required>
+                <option value="">-- Sélectionner un jour --</option>
+                <option value="lundi">Lundi</option>
+                <option value="mardi">Mardi</option>
+                <option value="mercredi">Mercredi</option>
+                <option value="jeudi">Jeudi</option>
+                <option value="vendredi">Vendredi</option>
+                <option value="samedi">Samedi</option>
+                <option value="dimanche">Dimanche</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="heure_debut">Heure de début</label>
+            <input type="time" name="heure_debut" id="heure_debut" required>
+        </div>
+        <div class="form-group">
+            <label for="heure_fin">Heure de fin</label>
+            <input type="time" name="heure_fin" id="heure_fin" required>
+        </div>
+        <div class="form-group">
+            <label for="salle">Salle</label>
+            <input type="text" name="salle" id="salle" placeholder="Salle (optionnel)">
+        </div>
+        <button type="submit" class="btn btn-success">Ajouter</button>
+    </form>
+</div>
+
+<!-- Tableau de l'emploi du temps -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Matière / Logiciel</th>
+                <th>Enseignant</th>
+                <th>Jour</th>
+                <th>Heure début</th>
+                <th>Heure fin</th>
+                <th>Salle</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for seance in emploi_temps %}
+            <tr>
+                <td>{{ seance.matiere.nom }}</td>
+                <td>{{ seance.enseignant.nom }} {{ seance.enseignant.prenom }}</td>
+                <td>{{ seance.jour_semaine|capfirst }}</td>
+                <td>{{ seance.heure_debut }}</td>
+                <td>{{ seance.heure_fin }}</td>
+                <td>{{ seance.salle|default:"-" }}</td>
+                <td class="action-buttons">
+                    <a href="{% url 'modifier_seance' seance.id %}" class="btn btn-primary" title="Modifier">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="{% url 'supprimer_seance' seance.id %}" class="btn btn-danger" title="Supprimer" onclick="return confirm('Voulez-vous vraiment supprimer cette séance ?')">
+                        <i class="fas fa-trash"></i>
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" style="text-align:center;">Aucune séance trouvée</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

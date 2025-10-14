@@ -1,0 +1,159 @@
+{% extends "AdminPanel.html" %}
+
+{% block title %}Gestion des étudiants{% endblock %}
+
+{% block content %}
+<div class="page-title">
+    <h2>Gestion des étudiants</h2>
+</div>
+
+<!-- Formulaire d'enregistrement -->
+<div class="form-container">
+    {% if messages %}
+        <div style="text-align:center; color: green; font-style:italic; font-weight:bold; margin-bottom:20px;">
+            {% for message in messages %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+    <form method="POST" action="{% url 'inscrire_etudiant' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="photo">Photo</label>
+            <input type="file" name="photo" id="photo" accept="image/*">
+        </div>
+
+        <div class="form-group">
+            <label for="nom">Nom</label>
+            <input type="text" name="nom" id="nom" placeholder="Nom" required>
+        </div>
+        <div class="form-group">
+            <label for="prenom">Prénom</label>
+            <input type="text" name="prenom" id="prenom" placeholder="Prénom" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="email" name="email" id="email" placeholder="Email">
+        </div>
+        <div class="form-group">
+            <label for="telephone">Téléphone</label>
+            <input type="text" name="telephone" id="telephone" placeholder="Téléphone">
+        </div>
+        <div class="form-group">
+            <label for="adresse">Adresse</label>
+            <textarea name="adresse" id="adresse" placeholder="Adresse"></textarea>
+        </div>
+        <div class="form-group">
+            <label for="date_naissance">Date de naissance</label>
+            <input type="date" name="date_naissance" id="date_naissance">
+        </div>
+        <div class="form-group">
+            <label for="statut">Statut</label>
+            <select name="statut" id="statut">
+                <option value="actif">Actif</option>
+                <option value="inactif">Inactif</option>
+                <option value="suspendu">Suspendu</option>
+            </select>
+        </div>
+        <!-- Champs pour l'inscription -->
+        <div class="form-group">
+            <label for="matieres">Logiciels</label>
+            <select name="matieres" id="matieres" multiple>
+                {% for logiciel in logiciels %}
+                    <option value="{{ logiciel.id }}">{{ logiciel.nom }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="inscription_statut">Statut inscription</label>
+            <select name="inscription_statut" id="inscription_statut">
+                <option value="inscrit">Inscrit</option>
+                <option value="termine">Terminé</option>
+                <option value="abandon">Abandon</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="prix_inscription">Prix inscription</label>
+            <input type="number" name="prix_inscription" id="prix_inscription" value="25000" readonly>
+        </div>
+
+        <button type="submit" class="btn btn-success">Enregistrer</button>
+    </form>
+</div>
+
+<!-- Tableau des étudiants -->
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>Matricule</th>
+                <th>Photo</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Téléphone</th>
+                <th>Statut</th>
+                <th>Logiciel</th>
+                <th>Statut inscription</th>
+                <th>Prix inscription</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+       <tbody>
+    {% for etudiant in etudiants %}
+        <tr>
+            <td>{{ etudiant.matricule }}</td>
+            <td>
+                {% if etudiant.photo %}
+                    <img src="{{ etudiant.photo.url }}" alt="Photo" style="width:50px; height:50px; object-fit:cover; border-radius:50%;">
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td>{{ etudiant.nom }}</td>
+            <td>{{ etudiant.prenom }}</td>
+            <td>{{ etudiant.email|default:"-" }}</td>
+            <td>{{ etudiant.telephone|default:"-" }}</td>
+            <td>{{ etudiant.statut|default:"-" }}</td>
+            <td>
+                {% if etudiant.inscriptions.all %}
+                    {% for inscription in etudiant.inscriptions.all %}
+                        {{ inscription.logiciel.nom }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td>
+                {% if etudiant.inscriptions.all %}
+                    {% for inscription in etudiant.inscriptions.all %}
+                        {{ inscription.statut }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td>25 000 GNF</td>
+            <td class="action-buttons">
+                <a href="#" class="btn btn-primary" title="Modifier">
+                    <i class="fas fa-edit"></i>
+                </a>
+                <a href="#" class="btn btn-danger" title="Supprimer" onclick="return confirm('Voulez-vous vraiment supprimer cet étudiant ?')">
+                    <i class="fas fa-trash"></i>
+                </a>
+                <a href="" class="btn btn-info" title="Imprimer la carte" target="_blank">
+                    <i class="fas fa-id-card"></i>
+                </a>
+            </td>
+        </tr>
+    {% empty %}
+        <tr>
+            <td colspan="11" style="text-align:center;">Aucun étudiant trouvé</td>
+        </tr>
+    {% endfor %}
+       </tbody>
+
+    </table>
+</div>
+
+{% endblock %}

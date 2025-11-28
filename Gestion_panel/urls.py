@@ -12,6 +12,7 @@ urlpatterns = [
 
     path('etudiants/', views.etudiants, name="etudiants"),  # page d'accueil de l'app
     path('inscrire_etudiant/', views.inscrire_etudiant, name="inscrire_etudiant"),  # page d'accueil de l'app
+    path('etudiant/carte/<int:id>/', views.carte_etudiant, name='carte_etudiant'),
 
     path('utilisateurs/', views.utilisateurs, name="utilisateurs"),  # page d'accueil de l'app
     path('creer_utilisateur/', views.creer_utilisateur, name="creer_utilisateur"),  # page d'accueil de l'app

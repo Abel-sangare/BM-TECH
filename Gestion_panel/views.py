@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.contrib.auth.hashers import make_password, check_password
-
+from django.http import HttpResponse
 from Gestion_panel.models import Etudiant, Inscription, Logiciel, Utilisateur
 
 
@@ -268,6 +268,26 @@ def inscrire_etudiant(request):
 
     return render(request, 'etudiants.html')
 
+def carte_etudiant(request, id):
+    etudiant = Etudiant.objects.get(id=id)
+
+    template_path = 'pdf/etudiant.html'
+    context = {'etudiant': etudiant}
+
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="carte_{etudiant.nom}.pdf"'
+
+    template = get_template(template_path)
+    html = template.render(context)
+
+    pisa_status = pisa.CreatePDF(
+        html, dest=response
+    )
+
+    if pisa_status.err:
+        return HttpResponse("Erreur lors de la génération du PDF")
+
+    return response
 
 def logiciels(request):
     """

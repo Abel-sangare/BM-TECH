@@ -7,7 +7,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "default-secret-key")
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["BMTech.up.railway.app"]
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',

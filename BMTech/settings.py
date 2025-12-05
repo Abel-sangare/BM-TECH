@@ -5,13 +5,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "default-secret-key")
 
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = [
-    'web-production-94b23.up.railway.app',
-    '.up.railway.app',
-    'bmtech.bm',
-]
+ALLOWED_HOSTS = ['197a30db-7379-43fc-b739-5b80edc59cb3-00-3bzgg87jtxu2u.riker.replit.dev']
+CSRF_TRUSTED_ORIGINS = ['https://197a30db-7379-43fc-b739-5b80edc59cb3-00-3bzgg87jtxu2u.riker.replit.dev']
+
 
 
 INSTALLED_APPS = [

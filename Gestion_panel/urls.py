@@ -6,12 +6,15 @@ from . import views
 # app_name = "B"  # 🔹 Change "monapp" par le nom de ton app
 
 urlpatterns = [
-    path('', views.home, name="index"),  # page d'accueil de l'app
+    path('', views.accueil, name="accueil"),  # page d'accueil de l'app
+    path('bm/admin', views.home, name="BM.technologie.admin.connexion"),  # page d'accueil de l'app
     path('login/', views.login, name="login"),  # page d'accueil de l'app
 
 
     path('etudiants/', views.etudiants, name="etudiants"),  # page d'accueil de l'app
-    path('inscrire_etudiant/', views.inscrire_etudiant, name="inscrire_etudiant"),  # page d'accueil de l'app
+    path('etudiant/ajouter/', views.gestion_etudiant, name="inscrire_etudiant"),  # page d'accueil de l'app
+    path('suprimer_etudiant/<int:id>/', views.supprimer_etudiant, name="supprimer_etudiant"),  # page d'accueil de l'app
+    path('etudiant/modifier/<int:etudiant_id>/', views.gestion_etudiant, name="modifier_etudiant"),
     path('etudiant/carte/<int:id>/', views.carte_etudiant, name='carte_etudiant'),
 
     path('utilisateurs/', views.utilisateurs, name="utilisateurs"),  # page d'accueil de l'app
@@ -29,6 +32,8 @@ urlpatterns = [
 
     path('emploi/', views.emploi, name="emploi"),  # page d'accueil de l'app
     path('paiements/', views.paiements, name="paiements"),  # page d'accueil de l'app
+    path('enregistrer/paiement', views.enregistrer_paiement, name="enregistrer_paiement"),
+    path('api/etudiant_paiements/<int:etudiant_id>/', views.etudiant_paiements, name='etudiant_paiements'),
     path('handler_connexion/', views.handler_connexion, name='handler_connexion'),
     path('logout/', views.deconnexion, name='logout'),
     path('profil/', views.profil, name='profil'),

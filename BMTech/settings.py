@@ -5,9 +5,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "default-secret-key")
 
-DEBUG = False
+# En développement local, DEBUG doit être True pour que runserver serve les fichiers statiques
+DEBUG = True
 
-ALLOWED_HOSTS = ['197a30db-7379-43fc-b739-5b80edc59cb3-00-3bzgg87jtxu2u.riker.replit.dev']
+ALLOWED_HOSTS = [
+    '197a30db-7379-43fc-b739-5b80edc59cb3-00-3bzgg87jtxu2u.riker.replit.dev',
+    '.replit.dev',  # Autorise tous les sous-domaines Replit
+    'localhost',
+    '127.0.0.1',
+    '192.168.1.136'
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://197a30db-7379-43fc-b739-5b80edc59cb3-00-3bzgg87jtxu2u.riker.replit.dev',
+    'https://*.replit.dev',  # Important pour Replit
+]
 CSRF_TRUSTED_ORIGINS = ['https://197a30db-7379-43fc-b739-5b80edc59cb3-00-3bzgg87jtxu2u.riker.replit.dev']
 
 

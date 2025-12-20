@@ -1,38 +1,153 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <title>Carte de Membre</title>
+    <link rel="stylesheet" href="style.css">
+</head>
 <style>
-    body {
-        font-family: Arial;
-        font-size: 12px;
+        body {
+        background: #eee;
+        font-family: Arial, sans-serif;
     }
-    .carte {
+
+    .card {
         width: 350px;
-        height: 200px;
-        border: 2px solid #000;
-        padding: 10px;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 2px solid #222;
+        margin: 20px auto;
     }
-    .photo {
-        width: 80px;
-        height: 80px;
-        border: 1px solid #000;
+
+    /* En-tête */
+    .header {
+        display: flex;
+        justify-content: space-between;
+        background: linear-gradient(90deg, red, yellow, green);
+        padding: 10px;
+        color: black;
+    }
+
+    .logo {
+        font-size: 14px;
+        font-weight: bold;
+    }
+
+    .logo .c {
+        font-size: 24px;
+        color: orange;
+    }
+
+    .logo p {
+        font-size: 10px;
+        margin: 2px 0 0;
+    }
+
+    .image-top img {
+        width: 50px;
+    }
+
+    /* Titre */
+    .title {
+        background: #555;
+        color: white;
+        text-align: center;
+        padding: 8px;
+        font-weight: bold;
+    }
+
+    /* Numéro */
+    .numero {
+        text-align: center;
+        color: red;
+        font-weight: bold;
+        margin: 5px 0;
+    }
+
+    /* Photo */
+    .photo-section {
+        text-align: center;
+        position: relative;
+    }
+
+    .photo-section img {
+        width: 120px;
+        border-radius: 8px;
+        border: 2px solid #ccc;
+    }
+
+    .badge {
+        position: absolute;
+        bottom: 10px;
+        right: 20px;
+        background: white;
+        border: 2px solid blue;
+        border-radius: 50%;
+        padding: 10px;
+        font-size: 12px;
+        color: blue;
+    }
+
+    /* Infos */
+    .infos {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .infos p {
+        margin: 4px 0;
+    }
+
+    /* Pied */
+    .footer {
+        background: #222;
+        color: white;
+        text-align: center;
+        padding: 6px;
+        font-size: 13px;
     }
 </style>
-</head>
-
 <body>
-<div class="carte">
-    <h3>CARTE ÉTUDIANT</h3>
 
-    {% if etudiant.photo %}
-        <img src="{{ etudiant.photo.path }}" class="photo">
-    {% endif %}
+<div class="card">
+    <!-- En-tête -->
+    <div class="header">
+        <div class="logo">
+            <span class="c">C</span>YBER-EXCELLENCE
+            <p>Centre de Formation<br>Informatique Cyber Excellence</p>
+        </div>
+        <div class="image-top">
+            <img src="globe.png" alt="Informatique">
+        </div>
+    </div>
 
-    <p><strong>Nom :</strong> {{ etudiant.nom }}</p>
-    <p><strong>Prénom :</strong> {{ etudiant.prenom }}</p>
-    <p><strong>Téléphone :</strong> {{ etudiant.telephone }}</p>
-    <p><strong>Statut :</strong> {{ etudiant.statut }}</p>
+    <!-- Titre -->
+    <div class="title">CARTE DE MEMBRE</div>
+
+    <!-- Numéro -->
+    <div class="numero">N° 001</div>
+
+    <!-- Photo -->
+    <div class="photo-section">
+        {% if etudiant.photo %}
+            <img src="{{ etudiant.photo.path }}" class="photo">
+        {% endif %}
+    </div>
+    <!-- Infos -->
+    <div class="infos">
+        <p><strong>Noms :</strong> {{ etudiant.nom }}</p>
+        <p><strong>Prénom :</strong> {{ etudiant.prenom }}</p>
+        <p><strong>Tél :</strong> {{ etudiant.telephone }}</p>
+        <p><strong>Email :</strong> {{ etudiant.email }}</p>
+    </div>
+
+    <!-- Pied -->
+    <div class="footer">
+        Sis à Kagbélen – Plateau
+    </div>
 </div>
+
 </body>
 </html>

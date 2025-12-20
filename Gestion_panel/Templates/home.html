@@ -1,0 +1,613 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BM Technologie - Centre de Formation Informatique</title>
+    
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="{% static 'css/client_style.css' %}">
+    <style>
+        /* Styles inline pour démarrer rapidement */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f8f9fa;
+        }
+        
+        /* Header & Navigation */
+        .client-header {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 2rem;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .logo i {
+            color: #4fc3f7;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #4fc3f7;
+        }
+        
+        .cta-button {
+            background: #4fc3f7;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(79, 195, 247, 0.3);
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(26, 35, 126, 0.9), rgba(26, 35, 126, 0.8)), url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 150px 2rem 100px;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            opacity: 0.9;
+        }
+        
+        /* Section commune */
+        .section {
+            padding: 80px 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: #1a237e;
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            color: #666;
+            font-size: 1.1rem;
+        }
+        
+        /* Programmes */
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .program-card {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .program-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .program-icon {
+            background: #e3f2fd;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .program-icon i {
+            font-size: 1.8rem;
+            color: #1a237e;
+        }
+        
+        .program-card h3 {
+            color: #1a237e;
+            margin-bottom: 1rem;
+        }
+        
+        /* Cyber Café Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-item {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: #4fc3f7;
+            margin-bottom: 1rem;
+        }
+        
+        /* Témoignages */
+        .testimonials {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 3rem;
+            position: relative;
+        }
+        
+        .testimonial-slider {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .testimonial-slide {
+            text-align: center;
+            animation: slide 20s infinite;
+        }
+        
+        .student-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            background: #e3f2fd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: #1a237e;
+        }
+        
+        .quote {
+            font-style: italic;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: #555;
+        }
+        
+        .student-name {
+            color: #1a237e;
+            font-weight: 600;
+        }
+        
+        @keyframes slide {
+            0%, 25% { opacity: 1; transform: translateX(0); }
+            30%, 55% { opacity: 0; transform: translateX(100%); }
+            60%, 85% { opacity: 0; transform: translateX(-100%); }
+            90%, 100% { opacity: 1; transform: translateX(0); }
+        }
+        
+        /* Footer */
+        .client-footer {
+            background: #1a237e;
+            color: white;
+            padding: 4rem 2rem 2rem;
+        }
+        
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+        
+        .footer-column h3 {
+            color: #4fc3f7;
+            margin-bottom: 1.5rem;
+        }
+        
+        .footer-links a {
+            color: #ddd;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #4fc3f7;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            color: white;
+            background: rgba(255,255,255,0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        
+        .social-links a:hover {
+            background: #4fc3f7;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .nav-links {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .section {
+                padding: 60px 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="client-header">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-laptop-code"></i>
+                <span>BM Technologie</span>
+            </div>
+            <nav class="nav-links">
+                <a href="#accueil">Accueil</a>
+                <a href="#programmes">Programmes</a>
+                <a href="#cyber">Cyber Café</a>
+                <a href="#temoignages">Témoignages</a>
+                <a href="#contact">Contact</a>
+            </nav>
+            <a href="#inscription" class="cta-button">S'inscrire Maintenant</a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="accueil">
+        <h1>Votre Partenaire en Formation Informatique</h1>
+        <p>Découvrez notre centre de formation équipé d'un cyber café moderne. Apprenez les dernières technologies dans un environnement stimulant avec des équipements de pointe.</p>
+        <a href="#programmes" class="cta-button">Découvrir nos Programmes</a>
+    </section>
+
+    <!-- Programmes de Formation -->
+    <section class="section" id="programmes">
+        <div class="section-title">
+            <h2>Nos Programmes de Formation</h2>
+            <p>Des formations adaptées aux besoins du marché</p>
+        </div>
+        
+        <div class="programs-grid">
+            <div class="program-card">
+                <div class="program-icon">
+                    <i class="fas fa-code"></i>
+                </div>
+                <h3>Développement Web</h3>
+                <p>HTML, CSS, JavaScript, React, Node.js - Devenez développeur full-stack</p>
+                <ul style="margin-top: 1rem; color: #666;">
+                    <li>Durée : 6 mois</li>
+                    <li>Certification reconnue</li>
+                    <li>Projets pratiques</li>
+                </ul>
+            </div>
+            
+            <div class="program-card">
+                <div class="program-icon">
+                    <i class="fas fa-database"></i>
+                </div>
+                <h3>Base de Données</h3>
+                <p>MySQL, MongoDB, Administration - Gérez des données efficacement</p>
+                <ul style="margin-top: 1rem; color: #666;">
+                    <li>Durée : 4 mois</li>
+                    <li>Cas réels d'entreprise</li>
+                    <li>Optimisation avancée</li>
+                </ul>
+            </div>
+            
+            <div class="program-card">
+                <div class="program-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Cybersécurité</h3>
+                <p>Protection des systèmes, Ethical Hacking - Spécialisez-vous en sécurité</p>
+                <ul style="margin-top: 1rem; color: #666;">
+                    <li>Durée : 8 mois</li>
+                    <li>Laboratoire dédié</li>
+                    <li>Certifications internationales</li>
+                </ul>
+            </div>
+            
+            <div class="program-card">
+                <div class="program-icon">
+                    <i class="fas fa-desktop"></i>
+                </div>
+                <h3>Bureautique Avancée</h3>
+                <p>Office, Productivité - Maîtrisez les outils professionnels</p>
+                <ul style="margin-top: 1rem; color: #666;">
+                    <li>Durée : 2 mois</li>
+                    <li>Tous niveaux</li>
+                    <li>Attestation de compétences</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cyber Café -->
+    <section class="section" id="cyber" style="background: #f0f7ff;">
+        <div class="section-title">
+            <h2>Notre Cyber Café Moderne</h2>
+            <p>Équipements et services de qualité</p>
+        </div>
+        
+        <div class="features-grid">
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-tachometer-alt"></i>
+                </div>
+                <h3>Ordinateurs Haut Débit</h3>
+                <p>PC gaming avec processeurs i7, 32GB RAM, écrans 27" 144Hz</p>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-wifi"></i>
+                </div>
+                <h3>WiFi Ultra Rapide</h3>
+                <p>Fibre optique 1Gbps - Parfait pour streaming et téléchargements</p>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-print"></i>
+                </div>
+                <h3>Services d'Impression</h3>
+                <p>Impression couleur/noir, scan, photocopie à prix étudiants</p>
+            </div>
+            
+            <div class="feature-item">
+                <div class="feature-icon">
+                    <i class="fas fa-coffee"></i>
+                </div>
+                <h3>Espace Détente</h3>
+                <p>Zone café, snacks, espace de travail collaboratif</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Témoignages Étudiants -->
+    <section class="section" id="temoignages">
+        <div class="section-title">
+            <h2>Témoignages des Étudiants</h2>
+            <p>Ce que disent nos étudiants</p>
+        </div>
+        
+        <div class="testimonials">
+            <div class="testimonial-slider">
+                <div class="testimonial-slide">
+                    <div class="student-avatar">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <p class="quote">"La formation en développement web m'a permis de décrocher mon premier emploi dans une startup tech. Les équipements du cyber café sont parfaits pour pratiquer."</p>
+                    <p class="student-name">Marie K.</p>
+                    <p class="student-course">Diplômée Développement Web</p>
+                </div>
+                
+                <div class="testimonial-slide">
+                    <div class="student-avatar">
+                        <i class="fas fa-user-tie"></i>
+                    </div>
+                    <p class="quote">"Je viens régulièrement au cyber café pour travailler sur mes projets. La connexion est incroyablement rapide et l'ambiance est très professionnelle."</p>
+                    <p class="student-name">Ahmed S.</p>
+                    <p class="student-course">Étudiant en Cybersécurité</p>
+                </div>
+                
+                <div class="testimonial-slide">
+                    <div class="student-avatar">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <p class="quote">"Les formateurs sont exceptionnels et toujours disponibles. J'ai pu me reconvertir complètement grâce à la formation en base de données."</p>
+                    <p class="student-name">Sophie L.</p>
+                    <p class="student-course">Ancienne étudiante Bureautique</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact & Inscription -->
+    <section class="section" id="contact" style="background: linear-gradient(135deg, #1a237e, #283593); color: white;">
+        <div class="section-title">
+            <h2 style="color: white;">Prêt à Commencer ?</h2>
+            <p>Contactez-nous pour plus d'informations ou inscrivez-vous en ligne</p>
+        </div>
+        
+        <div style="max-width: 600px; margin: 0 auto; text-align: center;">
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+                <a href="tel:+1234567890" style="background: #4fc3f7; color: white; padding: 1rem 2rem; border-radius: 25px; text-decoration: none;">
+                    <i class="fas fa-phone"></i> Appelez-nous
+                </a>
+                <a href="mailto:contact@bmtechnologie.com" style="background: transparent; border: 2px solid #4fc3f7; color: white; padding: 1rem 2rem; border-radius: 25px; text-decoration: none;">
+                    <i class="fas fa-envelope"></i> Envoyez un email
+                </a>
+            </div>
+            
+            <div style="margin-top: 3rem; background: rgba(255,255,255,0.1); padding: 2rem; border-radius: 10px;">
+                <h3 style="margin-bottom: 1rem;">Horaires d'Ouverture</h3>
+                <p>Cyber Café : Lundi à Dimanche - 8h à 22h</p>
+                <p>Formations : Lundi à Vendredi - 9h à 18h</p>
+                <p>Samedi - 9h à 13h (cours intensifs)</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="client-footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>BM Technologie</h3>
+                <p>Centre de formation et cyber café moderne. Votre succès est notre priorité.</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Liens Rapides</h3>
+                <div class="footer-links">
+                    <a href="#accueil">Accueil</a>
+                    <a href="#programmes">Programmes</a>
+                    <a href="#cyber">Cyber Café</a>
+                    <a href="#temoignages">Témoignages</a>
+                    <a href="#contact">Contact</a>
+                </div>
+            </div>
+            
+            <div class="footer-column">
+                <h3>Contact</h3>
+                <div class="footer-links">
+                    <p><i class="fas fa-map-marker-alt"></i> 123 Rue de la Technologie, Ville</p>
+                    <p><i class="fas fa-phone"></i> +1 234 567 890</p>
+                    <p><i class="fas fa-envelope"></i> contact@bmtechnologie.com</p>
+                </div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.1);">
+            <p>&copy; 2024 BM Technologie. Tous droits réservés.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript pour les animations -->
+    <script>
+        // Animation des témoignages
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.testimonial-slide');
+        
+        function showNextSlide() {
+            slides.forEach(slide => {
+                slide.style.opacity = '0';
+                slide.style.transform = 'translateX(100%)';
+            });
+            
+            currentSlide = (currentSlide + 1) % slides.length;
+            slides[currentSlide].style.opacity = '1';
+            slides[currentSlide].style.transform = 'translateX(0)';
+        }
+        
+        // Changer de slide toutes les 5 secondes
+        setInterval(showNextSlide, 5000);
+        
+        // Smooth scroll pour les ancres
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('.client-header');
+            if(window.scrollY > 100) {
+                header.style.background = 'rgba(26, 35, 126, 0.95)';
+                header.style.backdropFilter = 'blur(10px)';
+            } else {
+                header.style.background = 'linear-gradient(135deg, #1a237e, #283593)';
+                header.style.backdropFilter = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

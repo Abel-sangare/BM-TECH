@@ -16,68 +16,93 @@
             {% endfor %}
         </div>
     {% endif %}
-    <form method="POST" action="{% url 'inscrire_etudiant' %}" enctype="multipart/form-data">
+    <form method="POST" action="{% if etudiant %}{% url 'modifier_etudiant' etudiant.id %}{% else %}{% url 'inscrire_etudiant' %}{% endif %}" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="form-group">
             <label for="photo">Photo</label>
             <input type="file" name="photo" id="photo" accept="image/*">
         </div>
+        <div class="form-group">
+                <label for="extrait_naissance">Extrait de naissance (PDF ou image)</label>
+                <input type="file"
+                    name="extrait_naissance"
+                    id="extrait_naissance"
+                    accept=".pdf,image/*">
+            </div>
 
         <div class="form-group">
             <label for="nom">Nom</label>
-            <input type="text" name="nom" id="nom" placeholder="Nom" required>
+            <input type="text" name="nom" id="nom" placeholder="Nom" required
+            value="{{ etudiant.nom|default:'' }}"
+            >
         </div>
         <div class="form-group">
             <label for="prenom">Prénom</label>
-            <input type="text" name="prenom" id="prenom" placeholder="Prénom" required>
+            <input type="text" name="prenom" id="prenom" placeholder="Prénom" required
+            value="{{ etudiant.prenom|default:'' }}"
+            >
         </div>
         <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" name="email" id="email" placeholder="Email">
+            <label for="email">Email (Optionnel)</label>
+            <input type="email" name="email" id="email" placeholder="Email"
+            value="{{ etudiant.email|default:'' }}"
+            >
         </div>
         <div class="form-group">
             <label for="telephone">Téléphone</label>
-            <input type="text" name="telephone" id="telephone" placeholder="Téléphone">
+            <input type="text" name="telephone" id="telephone" placeholder="Téléphone"
+            value="{{ etudiant.telephone|default:'' }}"
+            >
         </div>
         <div class="form-group">
             <label for="adresse">Adresse</label>
-            <textarea name="adresse" id="adresse" placeholder="Adresse"></textarea>
+            <textarea name="adresse" id="adresse" placeholder="Adresse"
+            value="{{ etudiant.adresse|default:'' }}"
+            ></textarea>
         </div>
         <div class="form-group">
             <label for="date_naissance">Date de naissance</label>
-            <input type="date" name="date_naissance" id="date_naissance">
+            <input type="date" name="date_naissance" id="date_naissance"
+            value="{{ etudiant.date_naissance|default:'' }}"
+            >
         </div>
         <div class="form-group">
             <label for="statut">Statut</label>
             <select name="statut" id="statut">
-                <option value="actif">Actif</option>
-                <option value="inactif">Inactif</option>
-                <option value="suspendu">Suspendu</option>
+                <option value="actif" {% if etudiant.statut == "actif" %}selected{% endif %}>Actif</option>
+                <option value="inactif" {% if etudiant.statut == "inactif" %}selected{% endif %}>Inactif</option>
+                <option value="suspendu" {% if etudiant.statut == "suspendu" %}selected{% endif %}>Suspendu</option>
             </select>
         </div>
         <!-- Champs pour l'inscription -->
-        <div class="form-group">
+       <div class="form-group">
             <label for="matieres">Logiciels</label>
             <select name="matieres" id="matieres" multiple>
                 {% for logiciel in logiciels %}
-                    <option value="{{ logiciel.id }}">{{ logiciel.nom }}</option>
+                    <option value="{{ logiciel.id }}"
+                        {% if logiciel.id in logiciels_selectionnes %}selected{% endif %}>
+                        {{ logiciel.nom }}
+                    </option>
                 {% endfor %}
             </select>
         </div>
-        <div class="form-group">
+       <div class="form-group">
             <label for="inscription_statut">Statut inscription</label>
             <select name="inscription_statut" id="inscription_statut">
-                <option value="inscrit">Inscrit</option>
-                <option value="termine">Terminé</option>
-                <option value="abandon">Abandon</option>
+                <option value="inscrit" {% if inscription_statut == "inscrit" %}selected{% endif %}>Inscrit</option>
+                <option value="termine" {% if inscription_statut == "termine" %}selected{% endif %}>Terminé</option>
+                <option value="abandon" {% if inscription_statut == "abandon" %}selected{% endif %}>Abandon</option>
             </select>
         </div>
         <div class="form-group">
             <label for="prix_inscription">Prix inscription</label>
-            <input type="number" name="prix_inscription" id="prix_inscription" value="25000" readonly>
+            <input type="number" name="prix_inscription" id="prix_inscription"
+            value="{{ prix_inscription|default:'' }}">
         </div>
 
-        <button type="submit" class="btn btn-success">Enregistrer</button>
+        <button type="submit" class="btn btn-success">
+            {% if etudiant %}Modifier{% else %}Enregistrer{% endif %}
+        </button>
     </form>
 </div>
 
@@ -135,10 +160,10 @@
             </td>
             <td>25 000 GNF</td>
             <td class="action-buttons">
-                <a href="#" class="btn btn-primary" title="Modifier">
+                <a href="{% url 'modifier_etudiant' etudiant.id %}" class="btn btn-primary" title="Modifier">
                     <i class="fas fa-edit"></i>
                 </a>
-                <a href="#" class="btn btn-danger" title="Supprimer" onclick="return confirm('Voulez-vous vraiment supprimer cet étudiant ?')">
+                <a href="{% url 'supprimer_etudiant' etudiant.id %}" class="btn btn-danger" title="Supprimer" onclick="return confirm('Voulez-vous vraiment supprimer cet étudiant ?')">
                     <i class="fas fa-trash"></i>
                 </a>
                 <a href="{% url 'carte_etudiant' etudiant.id %}" class="btn btn-info" title="Imprimer la carte" target="_blank">

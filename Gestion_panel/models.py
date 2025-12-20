@@ -1,4 +1,5 @@
 from datetime import datetime
+from time import timezone
 from django.db import models
 
 # -------------------------
@@ -48,6 +49,12 @@ class Etudiant(models.Model):
     date_inscription = models.DateTimeField(auto_now_add=True)
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default="actif")
     photo = models.ImageField(upload_to='photos_etudiants/', null=True, blank=True)  # Nouveau champ
+     # 🔹 NOUVEAU CHAMP
+    extrait_naissance = models.FileField(
+        upload_to='extraits_naissance/',
+        null=True,
+        blank=True
+    )
 
     def save(self, *args, **kwargs):
         if not self.matricule:
@@ -119,10 +126,11 @@ class Inscription(models.Model):
         unique_together = ('etudiant', 'logiciel')
 
     def save(self, *args, **kwargs):
-        # Si pas encore défini, récupérer le prix du logiciel
-        if not self.prix_inscription and self.logiciel:
+        # Appliquer le prix du logiciel UNIQUEMENT si le champ est None
+        if self.prix_inscription is None and self.logiciel:
             self.prix_inscription = self.logiciel.prix
         super().save(*args, **kwargs)
+
 
     def __str__(self):
         return f"{self.etudiant} -> {self.logiciel} ({self.prix_inscription} GNF)"
@@ -156,16 +164,11 @@ class EmploiTemps(models.Model):
 # Paiement des élèves
 # -------------------------
 class Paiement(models.Model):
-    MODE_CHOICES = [
-        ('cash', 'Espèces'),
-        ('mobile_money', 'Mobile Money'),
-        ('cheque', 'Chèque'),
-        ('virement', 'Virement bancaire'),
-    ]
-
     inscription = models.ForeignKey("Inscription", on_delete=models.CASCADE, related_name="paiements")
     montant_total = models.DecimalField(max_digits=10, decimal_places=2)  # montant attendu
     montant_paye = models.DecimalField(max_digits=10, decimal_places=2, default=0)  # cumul payé
+    date_premier_paiement = models.DateTimeField(null=True, blank=True)
+    date_dernier_paiement = models.DateTimeField(null=True, blank=True)
     date_creation = models.DateTimeField(auto_now_add=True)
     est_solde = models.BooleanField(default=False)
 
@@ -175,25 +178,22 @@ class Paiement(models.Model):
     def reste_a_payer(self):
         return self.montant_total - self.montant_paye
 
-
-# -------------------------
-# Tranches de paiement
-# -------------------------
-class TranchePaiement(models.Model):
-    paiement = models.ForeignKey(Paiement, on_delete=models.CASCADE, related_name="tranches")
-    montant = models.DecimalField(max_digits=10, decimal_places=2)
-    date_paiement = models.DateTimeField(auto_now_add=True)
-    mode = models.CharField(max_length=20, choices=Paiement.MODE_CHOICES, default='cash')
-    reference = models.CharField(max_length=100, null=True, blank=True)  # ex: numéro de reçu ou transaction
-
-    def __str__(self):
-        return f"Tranche {self.montant} - {self.paiement.inscription.eleve}"
-
     def save(self, *args, **kwargs):
+        # Si c'est un nouvel objet et qu'un montant est payé, définir la date du premier paiement
+        if self.pk is None and self.montant_paye > 0:
+            self.date_premier_paiement = timezone.now()
+            self.date_dernier_paiement = timezone.now()
+        
+        # Si c'est une mise à jour et que le montant payé a changé, mettre à jour la date du dernier paiement
+        elif self.pk is not None:
+            try:
+                old_instance = Paiement.objects.get(pk=self.pk)
+                if old_instance.montant_paye != self.montant_paye and self.montant_paye > 0:
+                    if not self.date_premier_paiement and old_instance.montant_paye == 0:
+                        self.date_premier_paiement = timezone.now()
+                    self.date_dernier_paiement = timezone.now()
+            except Paiement.DoesNotExist:
+                pass
+        
         super().save(*args, **kwargs)
 
-        # Met à jour le montant payé du paiement principal
-        paiement = self.paiement
-        paiement.montant_paye = sum([t.montant for t in paiement.tranches.all()])
-        paiement.est_solde = paiement.montant_paye >= paiement.montant_total
-        paiement.save()

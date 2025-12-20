@@ -22,7 +22,7 @@
             <div class="sidebar-menu">
                 <ul>
                     <li class="active">
-                        <a href="{% url 'index' %}">
+                        <a href="{% url 'BM.technologie.admin.connexion' %}">
                             <i class="fas fa-tachometer-alt"></i>
                             <span>Tableau de bord</span>
                         </a>
@@ -39,14 +39,9 @@
                             <span>Logiciels</span>
                         </a>
                     </li>
+                    {% if request.session.user_role == 'super' %}
                     <li>
-                        <a href="{% url 'emploi' %}">
-                            <i class="fas fa-calendar-alt"></i>
-                            <span>Emploi du temps</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{url 'paiements' %}">
+                        <a href="{% url 'paiements' %}">
                             <i class="fas fa-users"></i>
                             <span>Paiements</span>
                         </a>
@@ -57,6 +52,7 @@
                             <span>Utilisateurs</span>
                         </a>
                     </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
